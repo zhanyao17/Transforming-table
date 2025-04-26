@@ -31,27 +31,39 @@ string ChooseFileMenu(){
 
 int main() {
     /* Store item to vector */
+    int ncol, nrow; string col_status;
+    // getting user input
     string file_path = ChooseFileMenu(), line; ifstream file(file_path); 
+    cout << "Enter number of column: "; cin >> ncol;
+    cout << "Enter number of row: "; cin >> nrow;
+    cout << "Your data sheet got column name? (y/n): "; cin >> col_status;
+    
+    if (col_status != "y" && col_status != "n") {
+        cout << "[Error] Please make sure your answer is valid!";
+        return 0;
+    }
+    
     vector<string> values;
     int c = 0;
 
     while (getline(file, line)) {
         if (!line.empty()) {
             c++;
-            if (c != 1) values.push_back(line); // ignore col name
+            if (col_status == "y"){
+                col_status = "0";
+                continue;
+            }
+            values.push_back(line); // ignore col name
         }
     }
     if (values.size() != 1200) {
-        cerr << "Expected 1200 values, but got " << values.size() << endl;
+        cerr << "[Error] Expected 1200 values, but got " << values.size() << endl;
+        cout << "[Hiint] Check your datasheet whether got column name or not." << endl;
         return 1;
     }
     
     /* Reshape */
-    int ncol, nrow;
-    cout << "Enter number of column: ";
-    cin >> ncol;
-    cout << "Enter number of row: ";
-    cin >> nrow;
+
 
     string reshaped[nrow][ncol]; int item_index = 0;
 
