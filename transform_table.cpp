@@ -10,7 +10,6 @@ using namespace std;
 /* Menu for file selection */
 string ChooseFileMenu(){
     char buffer[1024]; string result;
-
     FILE* fp = popen(
         "osascript -e 'POSIX path of (choose file of type {\"public.comma-separated-values-text\"} with prompt \"Select a CSV file\")'", 
         "r"
@@ -31,24 +30,19 @@ string ChooseFileMenu(){
 
 int main() {
     /* Store item to vector */
-    int ncol, nrow; string col_status;
+    int ncol, nrow; string col_status, line; vector<string> values;
+
     // getting user input
-    string file_path = ChooseFileMenu(), line; ifstream file(file_path); 
+    string file_path = ChooseFileMenu(); ifstream file(file_path); 
     cout << "Enter number of column: "; cin >> ncol;
     cout << "Enter number of row: "; cin >> nrow;
     cout << "Your data sheet got column name? (y/n): "; cin >> col_status;
-    
     if (col_status != "y" && col_status != "n") {
         cout << "[Error] Please make sure your answer is valid!";
         return 0;
     }
-    
-    vector<string> values;
-    int c = 0;
-
     while (getline(file, line)) {
         if (!line.empty()) {
-            c++;
             if (col_status == "y"){
                 col_status = "0";
                 continue;
@@ -63,8 +57,6 @@ int main() {
     }
     
     /* Reshape */
-
-
     string reshaped[nrow][ncol]; int item_index = 0;
 
     for (int col = 0; col < ncol; ++col){
